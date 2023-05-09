@@ -83,6 +83,46 @@ const camera = new THREE.PerspectiveCamera(
 camera.position.z = 3
 scene.add(camera)
 
+//Audio
+const listener = new THREE.AudioListener()
+camera.add(listener)
+//audio source
+const sound = new THREE.Audio(listener)
+//audio loader
+console.log(listener)
+const audioLoader = new THREE.AudioLoader()
+audioLoader.load("./audio/eliza.mp3", function (buffer) {
+  sound.setBuffer(buffer)
+  sound.setLoop(true)
+  sound.setVolume(0.5)
+  sound.play()
+})
+
+//add audio controls
+const audioControls = {
+  volume: 0.5,
+  play: true,
+  pause: false,
+  stop: false,
+}
+
+gui
+  .add(audioControls, "volume")
+  .min(0)
+  .max(1)
+  .step(0.01)
+  .onChange(() => {
+    sound.setVolume(audioControls.volume)
+  })
+
+gui.add(audioControls, "play").onChange(() => {
+  sound.play()
+})
+
+gui.add(audioControls, "pause").onChange(() => {
+  sound.pause()
+})
+
 // Controls
 const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
